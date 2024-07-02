@@ -51,7 +51,7 @@ class FluxAndMonoGeneratorServiceTest {
     @Test
     void namesFlux_immutability() {
 
-        final Flux<String> namesFlux_map = fluxAndMonoGeneratorService.namesFlux_map();
+        final Flux<String> namesFlux_map = fluxAndMonoGeneratorService.namesFlux_immutability();
 
         StepVerifier.create(namesFlux_map)
                 .expectNext("ALEX", "BEN", "CHLOE")
