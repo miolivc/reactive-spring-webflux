@@ -22,6 +22,23 @@ public class FluxAndMonoGeneratorService {
         return Mono.just("alex");
     }
 
+    public Flux<String> namesFlux_map(int stringLength) {
+
+        return Flux.fromIterable(Arrays.asList("alex", "ben", "chloe"))
+                .map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                .log(); // db or remote call
+    }
+
+    public Flux<String> namesFlux_immutability() {
+
+        final Flux<String> namesFlux = Flux.fromIterable(Arrays.asList("alex", "ben", "chloe"));
+
+        // nenhuma mudança no fluxo foi realizado devido a reactive Flux ser imutável
+        namesFlux.map(String::toUpperCase);
+        return namesFlux;
+    }
+
     public static void main(String[] args) {
 
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
