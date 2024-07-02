@@ -73,4 +73,25 @@ class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
 
     }
+
+    @Test
+    void namesFlux_flatmap_async() {
+
+        int stringLength = 3;
+
+        final Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux_flatmap_async(stringLength);
+
+        /**
+         * A partir do momento em que esta verificação torna-se sequencial numa chamada com delay async
+         * o teste deixa de passar devido aos elementos não serem mais tratados de maneira ordenada
+         * para resolver irá ser modificado para esperar um count desses elementos
+         */
+//        StepVerifier.create(namesFlux)
+//                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+//                .verifyComplete();
+//
+        StepVerifier.create(namesFlux)
+                .expectNextCount(9)
+                .verifyComplete();
+    }
 }
