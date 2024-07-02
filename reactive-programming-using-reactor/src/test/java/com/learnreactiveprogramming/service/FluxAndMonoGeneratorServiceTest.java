@@ -2,7 +2,11 @@ package com.learnreactiveprogramming.service;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.Arrays;
+import java.util.List;
 
 class FluxAndMonoGeneratorServiceTest {
 
@@ -92,6 +96,38 @@ class FluxAndMonoGeneratorServiceTest {
 //
         StepVerifier.create(namesFlux)
                 .expectNextCount(9)
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFlux_concatmap() {
+
+        int stringLength = 3;
+
+        final Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux_concatmap(stringLength);
+
+        StepVerifier.create(namesFlux)
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                .verifyComplete();
+
+        StepVerifier.create(namesFlux)
+                .expectNextCount(9)
+                .verifyComplete();
+
+    }
+
+    @Test
+    void nameMono_flatMap() {
+
+        final Mono<List<String>> value = fluxAndMonoGeneratorService.nameMono_flatMap();
+
+        /**
+         * Neste caso apesar do uso do flatMap, por tratar-se de um mono este resultado retorna de
+         * forma ordenada pois o método {@link FluxAndMonoGeneratorService#splitStringMono(String)}
+         * trabalha de forma síncrona
+         */
+        StepVerifier.create(value)
+                .expectNext(Arrays.asList("A", "L", "E", "X"))
                 .verifyComplete();
     }
 }
