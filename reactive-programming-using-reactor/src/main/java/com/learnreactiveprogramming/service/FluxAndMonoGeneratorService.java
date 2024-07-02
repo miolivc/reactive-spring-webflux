@@ -40,6 +40,23 @@ public class FluxAndMonoGeneratorService {
         return namesFlux;
     }
 
+    public Flux<String> namesFlux_flatmap(int stringLength) {
+
+        return Flux.fromIterable(Arrays.asList("alex", "ben", "chloe"))
+                .map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                // ALEX, CHLOE -> A, L, E, X, C, H, L, O, E
+                .flatMap(s -> splitString(s)) // return A, L, E, X, C, H, L, O, E
+                .log(); // db or remote call
+    }
+
+    public Flux<String> splitString(String name) {
+
+        final String[] split = name.split("");
+
+        return Flux.fromArray(split);
+    }
+
     public static void main(String[] args) {
 
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
