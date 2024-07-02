@@ -34,7 +34,7 @@ class FluxAndMonoGeneratorServiceTest {
         final Flux<String> namesFlux_map = fluxAndMonoGeneratorService.namesFlux_map(stringLength);
 
         StepVerifier.create(namesFlux_map)
-                .expectNext("ALEX", "CHLOE")
+                .expectNext("4-ALEX", "5-CHLOE")
                 .verifyComplete();
 
     }

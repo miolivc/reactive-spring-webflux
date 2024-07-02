@@ -27,6 +27,7 @@ public class FluxAndMonoGeneratorService {
         return Flux.fromIterable(Arrays.asList("alex", "ben", "chloe"))
                 .map(String::toUpperCase)
                 .filter(s -> s.length() > stringLength)
+                .map(s-> s.length() + "-" + s)
                 .log(); // db or remote call
     }
 
