@@ -130,4 +130,32 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext(Arrays.asList("A", "L", "E", "X"))
                 .verifyComplete();
     }
+
+    @Test
+    void nameMono_flatMapMany() {
+
+        final Flux<String> value = fluxAndMonoGeneratorService.nameMono_flatMapMany();
+
+        /**
+         * Neste caso apesar do uso do flatMapManu, por tratar-se de um mono este resultado retorna de
+         * forma ordenada pois o método {@link FluxAndMonoGeneratorService#splitString(String)}
+         * trabalha de forma síncrona
+         */
+        StepVerifier.create(value)
+                .expectNext("A", "L", "E", "X")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFlux_transform() {
+
+        int stringLength = 3;
+
+        final Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength);
+
+        StepVerifier.create(namesFlux)
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                .verifyComplete();
+    }
+
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 public class FluxAndMonoGeneratorService {
 
@@ -81,6 +82,22 @@ public class FluxAndMonoGeneratorService {
                 .log(); // db or remote call
     }
 
+    public Flux<String> namesFlux_transform(int stringLength) {
+
+        /**
+         * transform()
+         * Extrair parte da lógica e poder reutiliza-las em diversos locais
+         */
+        final Function<Flux<String>, Flux<String>> filtermap = name -> name.map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength);
+
+        return Flux.fromIterable(Arrays.asList("alex", "ben", "chloe"))
+                .transform(filtermap)
+                // ALEX, CHLOE -> A, L, E, X, C, H, L, O, E
+                .flatMap(s -> splitString(s)) // return A, L, E, X, C, H, L, O, E
+                .log(); // db or remote call
+    }
+
     public Mono<String> nameMono() {
         return Mono.just("alex");
     }
@@ -89,6 +106,16 @@ public class FluxAndMonoGeneratorService {
         return Mono.just("alex")
                 .map (String::toUpperCase)
                 .flatMap(this::splitStringMono)
+                .log();
+    }
+
+    /**
+     * O uso de flatMapMany() permite que um Mono seja transformado em um Flux
+     */
+    public Flux<String> nameMono_flatMapMany() {
+        return Mono.just("alex")
+                .map (String::toUpperCase)
+                .flatMapMany(this::splitString)
                 .log();
     }
 
