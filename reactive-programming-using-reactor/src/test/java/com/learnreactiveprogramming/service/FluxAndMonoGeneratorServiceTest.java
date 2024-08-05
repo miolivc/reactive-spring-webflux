@@ -158,4 +158,28 @@ class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    void namesFlux_transform_defaultIfEmpty() {
+
+        int stringLength = 6;
+
+        final Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength);
+
+        StepVerifier.create(namesFlux)
+//                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                .expectNext("default")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFlux_transform_switchIfEmpty() {
+
+        int stringLength = 6;
+
+        final Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux_transform_switchIfEmpty(stringLength);
+
+        StepVerifier.create(namesFlux)
+                .expectNext("D", "E", "F", "A", "U", "L", "T") // D, E, F, A, U, L, T
+                .verifyComplete();
+    }
 }

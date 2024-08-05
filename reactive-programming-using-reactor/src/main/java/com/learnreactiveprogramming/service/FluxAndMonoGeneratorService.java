@@ -91,10 +91,47 @@ public class FluxAndMonoGeneratorService {
         final Function<Flux<String>, Flux<String>> filtermap = name -> name.map(String::toUpperCase)
                 .filter(s -> s.length() > stringLength);
 
+        /**
+         * Ao exeuctar com um numero de caracteres que não existe na lista é esperado um
+         * {@link Flux#empty()}
+         * Para atribuir um valor padrão podemos utilizar o método defaultIfEmpty
+         */
         return Flux.fromIterable(Arrays.asList("alex", "ben", "chloe"))
                 .transform(filtermap)
                 // ALEX, CHLOE -> A, L, E, X, C, H, L, O, E
                 .flatMap(s -> splitString(s)) // return A, L, E, X, C, H, L, O, E
+                .defaultIfEmpty("default")
+                .log(); // db or remote call
+    }
+
+
+    /**
+     * Ao exeuctar com um numero de caracteres que não existe na lista é esperado um
+     * {@link Flux#empty()}
+     * Ao invés de atribuir um valor pode ser chaamdo um novo flux no lugar, utilizando
+     * a função switchIfEmpty
+     */
+    public Flux<String> namesFlux_transform_switchIfEmpty(int stringLength) {
+
+        /**
+         * transform()
+         * Extrair parte da lógica e poder reutiliza-las em diversos locais
+         */
+        final Function<Flux<String>, Flux<String>> filtermap = name -> name.map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                .flatMap(s -> splitString(s)); // return A, L, E, X, C, H, L, O, E
+
+        /**
+         * Criação de um novo flux para demonstrar o funcionamento do método switchIfEmpty
+         */
+        final Flux<String> alternativeFlux = Flux.just("default")
+                .transform(filtermap); // D, E, F, A, U, L, T
+
+
+        return Flux.fromIterable(Arrays.asList("alex", "ben", "chloe"))
+                .transform(filtermap)
+                // ALEX, CHLOE -> A, L, E, X, C, H, L, O, E
+                .switchIfEmpty(alternativeFlux)
                 .log(); // db or remote call
     }
 
