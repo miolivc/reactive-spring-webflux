@@ -146,6 +146,47 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Flux<String> explore_concat() {
+
+        final Flux<String> abcFlux = Flux.just("A", "B", "C");
+
+        final Flux<String> defFlux = Flux.just("D", "E", "F");
+
+        return Flux.concat(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> explore_concatWith() {
+
+        final Flux<String> abcFlux = Flux.just("A", "B", "C");
+
+        final Flux<String> defFlux = Flux.just("D", "E", "F");
+
+        return abcFlux.concatWith(defFlux).log();
+    }
+
+    /**
+     * A versão de método merge() no objeto flux é mergeWith()
+     */
+    public Flux<String> explore_merge() {
+
+        final Flux<String> abcFlux = Flux.just("A", "B", "C")
+                .delayElements(Duration.ofMillis(100));
+
+        final Flux<String> defFlux = Flux.just("D", "E", "F")
+                .delayElements(Duration.ofMillis(125));
+
+        return Flux.merge(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> explore_concatWithMono() {
+
+        final Mono<String> aFlux = Mono.just("A");
+
+        final Mono<String> bFlux = Mono.just("B");
+
+        return aFlux.concatWith(bFlux).log();
+    }
+
     /**
      * O uso de flatMapMany() permite que um Mono seja transformado em um Flux
      */
