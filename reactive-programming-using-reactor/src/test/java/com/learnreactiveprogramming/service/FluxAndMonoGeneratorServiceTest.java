@@ -206,7 +206,7 @@ class FluxAndMonoGeneratorServiceTest {
     @Test
     void explore_concatWithMono() {
 
-        final Flux<String> concatFlux = fluxAndMonoGeneratorService.explore_concatWithMono();
+        final Flux<String> concatFlux = fluxAndMonoGeneratorService.explore_concatWithMono().log();
 
         StepVerifier.create(concatFlux)
                 .expectNext("A", "B")
@@ -216,7 +216,7 @@ class FluxAndMonoGeneratorServiceTest {
     @Test
     void explore_merge() {
 
-        final Flux<String> mergeFlux = fluxAndMonoGeneratorService.explore_merge();
+        final Flux<String> mergeFlux = fluxAndMonoGeneratorService.explore_merge().log();
 
         StepVerifier.create(mergeFlux)
                 .expectNext("A", "D", "B", "E", "C", "F")
