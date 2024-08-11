@@ -201,6 +201,13 @@ public class FluxAndMonoGeneratorService {
                 .map(t4 -> t4.getT1() + t4.getT2() + t4.getT3() + t4.getT4());
     }
 
+    public Flux<String> explore_zip_2() {
+        final Flux<String> abcFlux = Flux.just("A", "B", "C");
+        final Flux<String> defFlux = Flux.just("D", "E", "F");
+
+        return Flux.zip(abcFlux, defFlux, (first, second) -> first + second);
+    }
+
     /**
      * O uso de flatMapMany() permite que um Mono seja transformado em um Flux
      */
