@@ -37,7 +37,7 @@ class FluxAndMonoControllerTest {
     @Test
     void flux_approach2() {
 
-        var flux = webTestClient
+        final var flux = webTestClient
                 .get()
                 .uri("/flux")
                 .exchange()
@@ -66,4 +66,46 @@ class FluxAndMonoControllerTest {
                     assert Objects.requireNonNull(responseBody).size() == 3;
                 });
     }
+
+    @Test
+    void mono() {
+
+        webTestClient
+                .get()
+                .uri("/mono")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody(String.class)
+                .consumeWith(stringEntityExchangeResult -> {
+                    final String responseBody = stringEntityExchangeResult.getResponseBody();
+                    assertEquals("hello-world", responseBody);
+                });
+    }
+
+    @Test
+    public void stream() {
+
+        final var flux = webTestClient
+                .get()
+                .uri("/stream")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .returnResult(Long.class)
+                .getResponseBody()
+                        .log();
+
+
+        /**
+         * Como este endpoint envia os dados de forma contínua e os dados continuam a ser produzidos
+         * após chamá-lo, faz-se necessário que haja o cancelamento da subscrição para verificação do
+         * resultado do endpoint.
+         */
+        StepVerifier.create(flux)
+                .expectNext(0L, 1L, 2L, 3L)
+                .thenCancel()
+                .verify();
+    }
+
 }
