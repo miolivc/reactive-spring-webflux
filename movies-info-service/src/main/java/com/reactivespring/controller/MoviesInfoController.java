@@ -26,7 +26,7 @@ public class MoviesInfoController {
     }
 
     @GetMapping("/movies-info/{id}")
-    public Mono<MovieInfo> getMovieInfoById(@RequestParam("id") String movieId) {
+    public Mono<MovieInfo> getMovieInfoById(@PathVariable("id") String movieId) {
 
         return movieInfoService.getMovieInfoById(movieId);
     }

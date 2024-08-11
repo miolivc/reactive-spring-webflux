@@ -25,7 +25,7 @@ class MoviesInfoControllerTest {
     @Autowired
     private MovieInfoRepository movieInfoRepository;
 
-    private static final String MOVIES_INFO_URL = "/v1/movies-info/";
+    private static final String MOVIES_INFO_URL = "/v1/movies-info";
 
     /**
      * Test data link: https://github.com/dilipsundarraj1/reactive-spring-webflux/blob/47bc655d2ecbd2132bcba6d8c4c09146d9f1e9a8/movies-info-service/src/test/java/intg/com/reactivespring/repository/MoviesInfoRepositoryIntgTest.java#L29
@@ -91,8 +91,8 @@ class MoviesInfoControllerTest {
 
         var movieId = "abc";
 
-        webTestClient.post()
-                .uri(MOVIES_INFO_URL + "{id}", movieId)
+        webTestClient.get()
+                .uri(MOVIES_INFO_URL + "/{id}", movieId)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -108,13 +108,13 @@ class MoviesInfoControllerTest {
 
         var movieId = "abc";
 
-        webTestClient.post()
-                .uri(MOVIES_INFO_URL + "{id}", movieId)
+        webTestClient.get()
+                .uri(MOVIES_INFO_URL + "/{id}", movieId)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
                 .expectBody()
-                .jsonPath("$.name").isEqualTo("Dark Knight Rises");
+                .jsonPath("$.title").isEqualTo("Dark Knight Rises");
     }
 
     @Test
@@ -149,10 +149,10 @@ class MoviesInfoControllerTest {
         var movieId = "abc";
 
         webTestClient.delete()
-                .uri(MOVIES_INFO_URL + "{id}", movieId)
+                .uri(MOVIES_INFO_URL + "/{id}", movieId)
                 .exchange()
                 .expectStatus()
-                .is2xxSuccessful()
+                .isNoContent()
                 .expectBody(Void.class);
     }
 
