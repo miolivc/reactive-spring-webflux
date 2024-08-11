@@ -17,7 +17,7 @@ public class FluxAndMonoController {
         return Flux.just(1, 2, 3);
     }
 
-    @GetMapping("/flux")
+    @GetMapping("/mono")
     public Mono<String> mono() {
 
         return Mono.just("hello-world");
