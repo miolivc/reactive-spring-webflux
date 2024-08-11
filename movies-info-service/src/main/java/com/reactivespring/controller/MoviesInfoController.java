@@ -38,4 +38,18 @@ public class MoviesInfoController {
         return movieInfoService.addMovieInfo(movieInfo);
     }
 
+    @PutMapping("/movies-info/{id}")
+    public Mono<MovieInfo> updateMovieInfo(@PathVariable("id") String movieId,
+                                           @RequestBody final MovieInfo updatedMovieInfo) {
+
+        return movieInfoService.updateMovieInfo(movieId, updatedMovieInfo);
+    }
+
+    @DeleteMapping("/movies-info/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> updateMovieInfo(@PathVariable("id") String movieId) {
+
+        return movieInfoService.deleteMovieInfo(movieId);
+    }
+
 }

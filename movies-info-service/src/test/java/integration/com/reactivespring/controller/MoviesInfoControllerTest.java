@@ -25,7 +25,7 @@ class MoviesInfoControllerTest {
     @Autowired
     private MovieInfoRepository movieInfoRepository;
 
-    private static final String MOVIES_INFO_URL = "/v1/movies-info";
+    private static final String MOVIES_INFO_URL = "/v1/movies-info/";
 
     /**
      * Test data link: https://github.com/dilipsundarraj1/reactive-spring-webflux/blob/47bc655d2ecbd2132bcba6d8c4c09146d9f1e9a8/movies-info-service/src/test/java/intg/com/reactivespring/repository/MoviesInfoRepositoryIntgTest.java#L29
@@ -92,10 +92,10 @@ class MoviesInfoControllerTest {
         var movieId = "abc";
 
         webTestClient.post()
-                .uri(MOVIES_INFO_URL + "/{id}", movieId)
+                .uri(MOVIES_INFO_URL + "{id}", movieId)
                 .exchange()
                 .expectStatus()
-                .isCreated()
+                .is2xxSuccessful()
                 .expectBody(MovieInfo.class)
                 .consumeWith(movieInfoEntityExchangeResult -> {
                     final MovieInfo responseBody = movieInfoEntityExchangeResult.getResponseBody();
@@ -109,12 +109,51 @@ class MoviesInfoControllerTest {
         var movieId = "abc";
 
         webTestClient.post()
-                .uri(MOVIES_INFO_URL + "/{id}", movieId)
+                .uri(MOVIES_INFO_URL + "{id}", movieId)
                 .exchange()
                 .expectStatus()
-                .isCreated()
+                .is2xxSuccessful()
                 .expectBody()
                 .jsonPath("$.name").isEqualTo("Dark Knight Rises");
+    }
+
+    @Test
+    void updateMovieInfo() {
+
+        var movieId = "abc";
+
+        final MovieInfo movieInfo = MovieInfo.builder()
+                .title("Dark Knight Rises1")
+                .year(2005)
+                .cast(List.of("Christian Bale", "Michael Cane"))
+                .releasedAt(LocalDate.parse("2005-06-15"))
+                .build();
+
+        webTestClient.put()
+                .uri(MOVIES_INFO_URL + "/{id}", movieId)
+                .bodyValue(movieInfo)
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody(MovieInfo.class)
+                .consumeWith(movieInfoEntityExchangeResult -> {
+                    final MovieInfo responseBody = movieInfoEntityExchangeResult.getResponseBody();
+                    assert responseBody != null;
+                    assertNotNull(responseBody.getId());
+                    assertEquals("Dark Knight Rises1", responseBody.getTitle());
+                });
+    }
+
+    @Test
+    void deleteMovieInfo() {
+        var movieId = "abc";
+
+        webTestClient.delete()
+                .uri(MOVIES_INFO_URL + "{id}", movieId)
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody(Void.class);
     }
 
 }
