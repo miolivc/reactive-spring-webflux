@@ -224,4 +224,15 @@ class FluxAndMonoGeneratorServiceTest {
 
     }
 
+    @Test
+    void explore_zip() {
+
+        final Flux<String> zipFlux = fluxAndMonoGeneratorService.explore_zip()
+                        .log();
+
+        StepVerifier.create(zipFlux)
+                .expectNext("AD14","BE25", "CF36")
+                .verifyComplete();
+
+    }
 }

@@ -188,6 +188,20 @@ public class FluxAndMonoGeneratorService {
     }
 
     /**
+     * O método zip retorna um tipo tupla que poderá ser utilizada para combinar os elementos do Flux
+     */
+    public Flux<String> explore_zip() {
+
+        final Flux<String> abcFlux = Flux.just("A", "B", "C");
+        final Flux<String> defFlux = Flux.just("D", "E", "F");
+        final Flux<String> start123Flux = Flux.just("1", "2", "3");
+        final Flux<String> start456Flux = Flux.just("4", "5", "6");
+
+        return Flux.zip(abcFlux, defFlux, start123Flux, start456Flux)
+                .map(t4 -> t4.getT1() + t4.getT2() + t4.getT3() + t4.getT4());
+    }
+
+    /**
      * O uso de flatMapMany() permite que um Mono seja transformado em um Flux
      */
     public Flux<String> nameMono_flatMapMany() {
