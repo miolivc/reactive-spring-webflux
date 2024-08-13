@@ -116,7 +116,7 @@ public class MoviesInfoControllerUnitTest {
 
         final MovieInfo movieInfo = MovieInfo.builder()
                 .year(-2005)
-                .cast(List.of("Christian Bale", "Michael Cane"))
+                .cast(List.of(""))
                 .releasedAt(LocalDate.parse("2005-06-15"))
                 .build();
 
@@ -142,10 +142,9 @@ public class MoviesInfoControllerUnitTest {
                 .consumeWith(result -> {
                     final String responseBody = result.getResponseBody();
                     assert responseBody != null;
-                    assertEquals(
-                            "movieInfo.name must be present, movieInfo.year must be a positive value",
-                            responseBody
-                    );
+
+                    var expectedErrorMessage = "movieInfo.name must be present, movieInfo.year must be a positive value, movieInfo.cast must be present";
+                    assertEquals(expectedErrorMessage, responseBody);
                 });
     }
 
