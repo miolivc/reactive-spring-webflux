@@ -143,7 +143,7 @@ public class MoviesInfoControllerUnitTest {
                     final String responseBody = result.getResponseBody();
                     assert responseBody != null;
 
-                    var expectedErrorMessage = "movieInfo.name must be present, movieInfo.year must be a positive value, movieInfo.cast must be present";
+                    var expectedErrorMessage = "movieInfo.cast must be present, movieInfo.name must be present, movieInfo.year must be a positive value";
                     assertEquals(expectedErrorMessage, responseBody);
                 });
     }
