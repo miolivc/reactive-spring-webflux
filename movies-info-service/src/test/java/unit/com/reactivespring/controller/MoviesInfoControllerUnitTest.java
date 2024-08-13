@@ -112,6 +112,44 @@ public class MoviesInfoControllerUnitTest {
     }
 
     @Test
+    void addMovieInfo_validation() {
+
+        final MovieInfo movieInfo = MovieInfo.builder()
+                .year(-2005)
+                .cast(List.of("Christian Bale", "Michael Cane"))
+                .releasedAt(LocalDate.parse("2005-06-15"))
+                .build();
+
+        when(movieInfoServiceMock.addMovieInfo(isA(MovieInfo.class))).thenReturn(
+                Mono.just(
+                        MovieInfo.builder()
+                                .id("mockId")
+                                .title("Batman Begins1")
+                                .year(2005)
+                                .cast(List.of("Christian Bale", "Michael Cane"))
+                                .releasedAt(LocalDate.parse("2005-06-15"))
+                                .build()
+                )
+        );
+
+        webTestClient.post()
+                .uri(MOVIES_INFO_URL)
+                .bodyValue(movieInfo)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(String.class)
+                .consumeWith(result -> {
+                    final String responseBody = result.getResponseBody();
+                    assert responseBody != null;
+                    assertEquals(
+                            "movieInfo.name must be present, movieInfo.year must be a positive value",
+                            responseBody
+                    );
+                });
+    }
+
+    @Test
     void updateMovieInfo() {
 
         var movieId = "abc";
