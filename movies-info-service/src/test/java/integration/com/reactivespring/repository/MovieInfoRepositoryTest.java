@@ -79,6 +79,20 @@ class MovieInfoRepositoryTest {
     }
 
     @Test
+    void findByTitle() {
+
+        var title = "Dark Knight Rises";
+
+        var movieInfo = movieInfoRepository.findById(title).log();
+
+        StepVerifier.create(movieInfo)
+                .assertNext(movieInfo1 -> {
+                    assertEquals("Dark Knight Rises", movieInfo1.getTitle());
+                })
+                .verifyComplete();
+    }
+
+    @Test
     void saveMovieInfo() {
 
         var movieInfo = new MovieInfo(null, "Batman Begins1",
