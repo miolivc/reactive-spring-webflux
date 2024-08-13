@@ -4,6 +4,7 @@ import com.reactivespring.domain.MovieInfo;
 import com.reactivespring.service.MovieInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -41,10 +42,12 @@ public class MoviesInfoController {
     }
 
     @PutMapping("/movies-info/{id}")
-    public Mono<MovieInfo> updateMovieInfo(@PathVariable("id") String movieId,
-                                           @RequestBody final MovieInfo updatedMovieInfo) {
+    public Mono<ResponseEntity<MovieInfo>> updateMovieInfo(@PathVariable("id") String movieId,
+                                                @RequestBody final MovieInfo updatedMovieInfo) {
 
-        return movieInfoService.updateMovieInfo(movieId, updatedMovieInfo);
+        return movieInfoService.updateMovieInfo(movieId, updatedMovieInfo)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
     @DeleteMapping("/movies-info/{id}")

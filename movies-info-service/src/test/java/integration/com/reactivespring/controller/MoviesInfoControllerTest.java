@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -142,6 +145,26 @@ class MoviesInfoControllerTest {
                     assertNotNull(responseBody.getId());
                     assertEquals("Dark Knight Rises1", responseBody.getTitle());
                 });
+    }
+
+    @Test
+    void updateMovieInfo_notfound() {
+
+        var movieId = "def";
+
+        final MovieInfo movieInfo = MovieInfo.builder()
+                .title("Dark Knight Rises1")
+                .year(2005)
+                .cast(List.of("Christian Bale", "Michael Cane"))
+                .releasedAt(LocalDate.parse("2005-06-15"))
+                .build();
+
+        webTestClient.put()
+                .uri(MOVIES_INFO_URL + "/{id}", movieId)
+                .bodyValue(movieInfo)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
     }
 
     @Test
