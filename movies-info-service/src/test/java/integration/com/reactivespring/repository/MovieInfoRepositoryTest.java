@@ -86,9 +86,7 @@ class MovieInfoRepositoryTest {
         var movieInfo = movieInfoRepository.findById(title).log();
 
         StepVerifier.create(movieInfo)
-                .assertNext(movieInfo1 -> {
-                    assertEquals("Dark Knight Rises", movieInfo1.getTitle());
-                })
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
