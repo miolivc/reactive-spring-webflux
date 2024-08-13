@@ -107,6 +107,18 @@ class MoviesInfoControllerTest {
     }
 
     @Test
+    void getMovieInfoById_notfound() {
+
+        var movieId = "def";
+
+        webTestClient.get()
+                .uri(MOVIES_INFO_URL + "/{id}", movieId)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
+
+    @Test
     void getMovieInfoByIdJsonPath() {
 
         var movieId = "abc";
