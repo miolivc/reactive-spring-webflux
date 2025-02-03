@@ -1,5 +1,6 @@
 package com.reactivespring.router;
 
+import com.reactivespring.handler.ReviewHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -11,13 +12,15 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class ReviewRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> reviewsRoute() {
+    public RouterFunction<ServerResponse> reviewsRoute(final ReviewHandler reviewHandler) {
 
         /**
          * Function Web approach do Reactive Spring webflux  - Hello World example
          */
         return route()
                 .GET("/v1/hello-world", (request) -> ServerResponse.ok().bodyValue("Hello World"))
+                .POST("/v1/reviews", reviewHandler::addReview)
+                .GET("/v1/reviews", reviewHandler::getReviews)
                 .build();
     }
 
