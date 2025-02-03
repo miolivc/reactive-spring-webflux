@@ -36,4 +36,24 @@ public class ReviewHandler {
 
         return ServerResponse.ok().body(reviewsFlux, Review.class);
     }
+    
+    public Mono<ServerResponse> updateReview(final ServerRequest request) {
+
+        final String reviewId = request.pathVariable("id");
+
+        final Mono<Review> existingReview = repository.findById(reviewId);
+
+        return existingReview
+                .flatMap(review -> request.bodyToMono(Review.class)
+                        .map(requestReview -> {
+                            review.setComment(requestReview.getComment());
+                            review.setRating(requestReview.getRating());
+
+                            return review;
+                        })
+                        .flatMap(repository::save)
+                        .flatMap(savedReview -> ServerResponse.ok().bodyValue(savedReview))
+                );
+    }
+    
 }
