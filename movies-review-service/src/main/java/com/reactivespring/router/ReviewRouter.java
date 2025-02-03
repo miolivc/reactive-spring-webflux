@@ -23,7 +23,8 @@ public class ReviewRouter {
                     builder
                             .POST("", reviewHandler::addReview)
                             .GET("", reviewHandler::getReviews)
-                            .PUT("/{id}", reviewHandler::updateReview);
+                            .PUT("/{id}", reviewHandler::updateReview)
+                            .DELETE("/{id}", reviewHandler::deleteReview);
                 })
                 .GET("/v1/hello-world", (request) -> ServerResponse.ok().bodyValue("Hello World"))
                 .build();

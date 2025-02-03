@@ -10,6 +10,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 @Component
 public class ReviewHandler {
 
@@ -31,6 +33,15 @@ public class ReviewHandler {
     }
 
     public Mono<ServerResponse> getReviews(final ServerRequest request) {
+
+        final Optional<String> movieInfoId = request.queryParam("movieInfoId");
+
+        if (movieInfoId.isPresent()) {
+
+            final Flux<Review> reviewsByMovieInfoId = repository.findReviewsByMovieInfoId(Long.valueOf(movieInfoId.get()));
+
+            return ServerResponse.ok().body(reviewsByMovieInfoId, Review.class);
+        }
 
         final Flux<Review> reviewsFlux = repository.findAll();
 
@@ -55,5 +66,16 @@ public class ReviewHandler {
                         .flatMap(savedReview -> ServerResponse.ok().bodyValue(savedReview))
                 );
     }
-    
+
+    public Mono<ServerResponse> deleteReview(final ServerRequest request) {
+
+        final String reviewId = request.pathVariable("id");
+
+        final Mono<Review> existingReview = repository.findById(reviewId);
+
+        return existingReview
+                .flatMap(review -> repository.deleteById(reviewId))
+                .then(ServerResponse.noContent().build());
+    }
+
 }
